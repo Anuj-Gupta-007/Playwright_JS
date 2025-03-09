@@ -1,0 +1,97 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Handle Dropdown
+- Location: /Users/anujgupta/Documents/LRN Projects/PlaywrightYT/tests/login.spec.js:32:6
+
+# Error details
+
+```
+Error: browserType.launch: Executable doesn't exist at /Users/anujgupta/Library/Caches/ms-playwright/chromium_headless_shell-1161/chrome-mac/headless_shell
+╔═════════════════════════════════════════════════════════════════════════╗
+║ Looks like Playwright Test or Playwright was just installed or updated. ║
+║ Please run the following command to download new browsers:              ║
+║                                                                         ║
+║     npx playwright install                                              ║
+║                                                                         ║
+║ <3 Playwright Team                                                      ║
+╚═════════════════════════════════════════════════════════════════════════╝
+```
+
+# Test source
+
+```ts
+   1 | const {test,expect} = require('@playwright/test');
+   2 |
+   3 | test.use({viewport:{width:1500,height:1000}})
+   4 |
+   5 | test("LoginPage", async function({page}){
+   6 |
+   7 |     await page.goto("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login");
+   8 |
+   9 |     console.log(await page.viewportSize().width);
+  10 |     console.log(await page.viewportSize().height);
+  11 |     await page.locator("//input[@name='username']").fill("Admin", {delay:500});
+  12 |     await page.locator("//input[@name='password']").fill("admin12322", {delay:100});
+  13 |     await page.locator("//button[@type='submit']").click();
+  14 |     await expect(page).toHaveURL(/dashboard/);
+  15 |     const text = await page.locator("//div[@class='oxd-topbar-header-title']/span/h6").textContent("div");
+  16 |     console.log(text);
+  17 |     await page.getByAltText("profile picture").click();
+  18 |     await page.getByText("Logout").click();
+  19 |     await expect(page).toHaveURL(/login/);
+  20 |     await page.waitForTimeout(2000);
+  21 |     const title = await page.locator("//div[@class='orangehrm-login-slot-wrapper']//h5").textContent();
+  22 |     console.log(title);
+  23 |     await page.locator("//input[@name='username']").fill("Admin", {delay:500});
+  24 |     await page.locator("//input[@name='password']").fill("admin1234", {delay:100});
+  25 |     await page.locator("//button[@type='submit']").click();
+  26 |     const errorMessage = await page.locator("//p[contains(@class,'oxd-alert-content-text')]").textContent();
+  27 |     console.log("Error Message is: "+ errorMessage);
+  28 |     expect(errorMessage.includes("Invalid credentials")).toBeTruthy();
+  29 | })
+  30 |
+  31 |
+> 32 | test.only("Handle Dropdown", async function({page}){
+     |      ^ Error: browserType.launch: Executable doesn't exist at /Users/anujgupta/Library/Caches/ms-playwright/chromium_headless_shell-1161/chrome-mac/headless_shell
+  33 |     await page.goto("https://freelance-learn-automation.vercel.app/signup");
+  34 |     await page.locator('#state').selectOption({label:"Delhi"});
+  35 |     await page.waitForTimeout(3000);
+  36 |     await page.locator('#state').selectOption({value:"Goa"});
+  37 |     await page.locator('#state').selectOption({index:7});
+  38 |
+  39 |    const dropdownValue = await page.locator("#state").textContent();
+  40 |    console.log("State Options: " + dropdownValue);
+  41 |    expect(dropdownValue.includes("Kerala")).toBeTruthy();
+  42 |
+  43 |
+  44 |    ///// Fetch list of values from dropdown
+  45 |     let stateDropdown= await page.$("#state"); 
+  46 |     let stateNames = await stateDropdown.$$("option"); 
+  47 |     console.log(stateNames)
+  48 |
+  49 |     let status = false;
+  50 |
+  51 |     for(let i= 0 ; i<stateNames.length ; i++){
+  52 |         let stateName = await stateNames[i].textContent();
+  53 |         console.log("Values are "+stateName);
+  54 |         if(stateName.includes("Goa")){
+  55 |             console.log("State Found");
+  56 |             status = true;
+  57 |             break;
+  58 |         }
+  59 |     }
+  60 |     await expect(status).toBeTruthy();
+  61 |     //multiselect dropdown
+  62 |
+  63 |     await page.locator("#hobbies").selectOption(['Playing','Swimming','Dancing'])
+  64 |     await page.waitForTimeout(3000);
+  65 |
+  66 | })
+  67 |
+```
