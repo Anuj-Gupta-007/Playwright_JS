@@ -29,7 +29,7 @@ test("LoginPage", async function({page}){
 })
 
 
-test.only("Handle Dropdown", async function({page}){
+test("Handle Dropdown", async function({page}){
     await page.goto("https://freelance-learn-automation.vercel.app/signup");
     await page.locator('#state').selectOption({label:"Delhi"});
     await page.waitForTimeout(3000);
@@ -44,8 +44,6 @@ test.only("Handle Dropdown", async function({page}){
    ///// Fetch list of values from dropdown
     let stateDropdown= await page.$("#state"); 
     let stateNames = await stateDropdown.$$("option"); 
-    console.log(stateNames)
-
     let status = false;
 
     for(let i= 0 ; i<stateNames.length ; i++){
